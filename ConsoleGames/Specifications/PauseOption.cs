@@ -2,6 +2,7 @@
 
 enum PauseOption
 {
-    Resume,
-    ExitToMainMenu
+    Resume = 1,
+    Settings = 2,
+    ExitToMainMenu = 3,
 }

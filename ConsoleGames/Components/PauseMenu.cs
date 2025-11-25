@@ -2,7 +2,7 @@
 
 namespace SnakeGame.Components;
 
-internal class PauseMenu(Action OnResume, Action OnExit) : LabeledMenu<PauseOption>("Game Paused", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 - 5, useNumberIndicator: true)
+internal class PauseMenu(GameSettings settings,Action OnResume, Action OnExit) : LabeledMenu<PauseOption>("Game Paused", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 - 5, useNumberIndicator: true)
 {
     internal override bool OnOptionSelected(PauseOption selectedOption)
     {
@@ -10,6 +10,14 @@ internal class PauseMenu(Action OnResume, Action OnExit) : LabeledMenu<PauseOpti
         if (selectedOption == PauseOption.Resume)
         {
             OnResume();
+        }
+        else if (selectedOption == PauseOption.Settings)
+        {
+            var (x, y) = (Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 - 5);
+            var settingsMenu = new SettingsMenu("Snake Game - Settings", settings, x, y);
+            settingsMenu.Show();
+            OnResume();
+            
         }
         else if (selectedOption == PauseOption.ExitToMainMenu)
         {

@@ -35,7 +35,7 @@ internal class Game
         _gameArea = new FrameWindow(_windowSize.width, _windowSize.height);
         _appleGenerator = new AppleManager(_gameArea);
         _snake = new Snake(_gameArea.GetCenterPosition(), 10);
-        _pauseMenu = new PauseMenu(() =>
+        _pauseMenu = new PauseMenu(_settings, () =>
         {
             Console.Clear();
             _gameArea.Render();
