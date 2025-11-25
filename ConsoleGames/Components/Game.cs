@@ -20,6 +20,7 @@ internal class Game
     Direction direction = Direction.Right;
     readonly LabelWithCounter _fpsLabel = new("FPS: ");
     readonly LabelWithCounter _scoreLabel = new("Score: ");
+    readonly LabelWithCounter _highestScoreLabel = new("Highest Score: ");
     readonly FrameWindow _gameArea;
     readonly AppleManager _appleGenerator;
     readonly GameSettings _settings = GameSettings.Default;
@@ -56,8 +57,10 @@ internal class Game
         _gameArea.Render();
         _fpsLabel.SetPosition(1, 0);
         _scoreLabel.SetPosition(_windowSize.width - 11, 0);
+        _highestScoreLabel.SetPosition(_windowSize.width / 2 - 7, 0);
         _snake.Render();
         _appleGenerator.Generate(1).First().Render();
+        _highestScoreLabel.Render(ref _settings.HighestScore);
     }
 
     public void Run()
@@ -120,6 +123,8 @@ internal class Game
                 var willEatApple = _appleGenerator.IsPositionOccupied(nextHeadPosition);
                 if (willEatApple)
                 {
+                    _settings.SnakeSpeed += _settings.SnakeSpeed * 0.02;
+                    _snakeClock.Update(_settings.SnakeSpeed / 1000.0);
                     _snake.Grow(_settings.SnakeGrowthPerApple);
                     _appleGenerator.RemoveApple(nextHeadPosition);
 
@@ -137,6 +142,11 @@ internal class Game
                     }
                     _score += 10;
 
+                    if (_score > _settings.HighestScore)
+                    {
+                        _settings.HighestScore = _score;
+                    }
+
                 }
 
                 _snake.Move(newX, newY);
@@ -147,6 +157,7 @@ internal class Game
                 }
 
                 _scoreLabel.Render(ref _score);
+                _highestScoreLabel.Render(ref _settings.HighestScore);
             }
 
             //Reset every 10 seconds

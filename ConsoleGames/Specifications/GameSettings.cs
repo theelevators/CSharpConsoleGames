@@ -5,7 +5,10 @@ namespace SnakeGame.Specifications;
 internal class GameSettings
 {
     public const string GameTitle = "Snake Game";
-    public Difficulty Difficulty { get; set { 
+    public Difficulty Difficulty
+    {
+        get; set
+        {
             field = value;
             switch (field)
             {
@@ -23,11 +26,13 @@ internal class GameSettings
                     break;
             }
 
-        } } = Difficulty.Easy;
-    public int InitialSnakeLength { get; set; } = 10;
-    public int SnakeGrowthPerApple { get; set; } = 1;
-    public int SnakeSpeed { get; set;  } = 100; // in milliseconds
-    public int NumberOfSimultaneousApples { get; set; } = 1;
+        }
+    } = Difficulty.Easy;
+    public int InitialSnakeLength = 10;
+    public int SnakeGrowthPerApple = 1;
+    public double SnakeSpeed = 100; // in milliseconds
+    public int NumberOfSimultaneousApples = 1;
+    public int HighestScore = 0;
 
     public static GameSettings Default => new();
 }
