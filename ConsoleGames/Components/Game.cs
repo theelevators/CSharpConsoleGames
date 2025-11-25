@@ -12,6 +12,7 @@ internal class Game
     readonly Snake _snake;
     readonly ComponentClock _snakeClock;
     int _score = 0;
+    int _highestScore = 0;
     (int width, int height) _windowSize = (Console.BufferWidth, Console.BufferHeight);
     bool isValid = true;
     bool gameOver = false;
@@ -50,6 +51,7 @@ internal class Game
             gameOver = true;
         });
 
+        _highestScore = _settings.HighestScore;
 
         Console.CursorVisible = false;
         Console.Title = "Snake Game";
@@ -60,7 +62,7 @@ internal class Game
         _highestScoreLabel.SetPosition(_windowSize.width / 2 - 7, 0);
         _snake.Render();
         _appleGenerator.Generate(1).First().Render();
-        _highestScoreLabel.Render(ref _settings.HighestScore);
+        _highestScoreLabel.Render(ref _highestScore);
     }
 
     public void Run()
@@ -123,7 +125,7 @@ internal class Game
                 var willEatApple = _appleGenerator.IsPositionOccupied(nextHeadPosition);
                 if (willEatApple)
                 {
-                    _settings.SnakeSpeed += _settings.SnakeSpeed * 0.02;
+                    _settings.SnakeSpeed = _settings.SnakeSpeed >= 10 ? _settings.SnakeSpeed - 5 : _settings.SnakeSpeed;
                     _snakeClock.Update(_settings.SnakeSpeed / 1000.0);
                     _snake.Grow(_settings.SnakeGrowthPerApple);
                     _appleGenerator.RemoveApple(nextHeadPosition);
@@ -144,7 +146,7 @@ internal class Game
 
                     if (_score > _settings.HighestScore)
                     {
-                        _settings.HighestScore = _score;
+                        _highestScore = _score;
                     }
 
                 }
@@ -157,7 +159,7 @@ internal class Game
                 }
 
                 _scoreLabel.Render(ref _score);
-                _highestScoreLabel.Render(ref _settings.HighestScore);
+                _highestScoreLabel.Render(ref _highestScore);
             }
 
             //Reset every 10 seconds
@@ -175,6 +177,6 @@ internal class Game
                 Console.Write("Game Over!");
             }
         }
-
+        _settings.HighestScore = _highestScore;
     }
 }

@@ -28,11 +28,11 @@ internal class GameSettings
 
         }
     } = Difficulty.Easy;
-    public int InitialSnakeLength = 10;
-    public int SnakeGrowthPerApple = 1;
-    public double SnakeSpeed = 100; // in milliseconds
-    public int NumberOfSimultaneousApples = 1;
-    public int HighestScore = 0;
+    public int InitialSnakeLength { get; set; } = 10;
+    public int SnakeGrowthPerApple { get; set; } = 1;
+    public double SnakeSpeed { get; set; } = 100; // in milliseconds
+    public int NumberOfSimultaneousApples { get; set; } = 1;
+    public int HighestScore { get; set; } = 0;
 
     public static GameSettings Default => new();
 }

@@ -27,7 +27,7 @@ internal class SettingsMenu(string menuTitle, GameSettings initialSettings, int 
                 break;
             case SettingOption.SnakeSpeed:
                 var speedOpt = new int[] { 100, 80, 60, 50, 40, 30, 20, 10 };
-                selectionIdx = Array.IndexOf(speedOpt, initialSettings.SnakeSpeed);
+                selectionIdx = Array.IndexOf(speedOpt, (int)initialSettings.SnakeSpeed);
                 var speedSelector = new SelectionSlider(speedOpt, selectionIdx, label: "ms: ");
                 var selectedSpeed = speedSelector.Show(x + selectedOption.AsRendeable().Length + 2, y + (int)selectedOption + 1);
 
@@ -44,7 +44,7 @@ internal class SettingsMenu(string menuTitle, GameSettings initialSettings, int 
                 return true;
 
         }
-        Show();
+        Show(selectedOption);
         return true;
     }
 }

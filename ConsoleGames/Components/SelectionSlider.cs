@@ -11,10 +11,14 @@ internal class SelectionSlider(int[] range, int initialSelection, string? label 
 
     public int Show(int x, int y)
     {
+        if (_selection < 0 || _selection >= _range.Length)
+        {
+            _selection = 0;
+        }
 
         var selectionLabel = new LabelWithCounter(_label);
         selectionLabel.SetPosition(x + _range.Length + 3, y);
-        
+
         Render(x, y);
         while (true)
         {
@@ -57,6 +61,6 @@ internal class SelectionSlider(int[] range, int initialSelection, string? label 
                 Console.Write('-');
             }
         }
-        Console.Write('|');        
+        Console.Write('|');
     }
 }

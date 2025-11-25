@@ -6,12 +6,13 @@ internal abstract class LabeledMenu<T>(string title, int x, int y, bool useNumbe
     where T : struct, Enum
 {
     internal abstract bool OnOptionSelected(T opt);
-    public void Show()
+    public void Show(T selectedOption = default)
     {
+        selectedOption.Next();
+
         Console.Clear();
         Console.CursorVisible = false;
         RenderTitle(x, y);
-        var selectedOption = default(T).Next(); // Start from the first option
         RenderMenuOptions(x, y + 1, selectedOption);
 
         while (true)
