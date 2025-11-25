@@ -1,5 +1,6 @@
 ﻿
 using SnakeGame.Specifiers;
+using SnakeGame.Utils;
 
 namespace SnakeGame.Components;
 
@@ -36,6 +37,16 @@ internal class Snake
         }
     }
 
+    public void Grow(int count)
+    {
+        while (count > 0)
+        {
+            var tail = _snakeBodyPositions.Last!.Value;
+            _snakeBodyPositions.AddLast(tail);
+            count--;
+        }
+    }
+
     public void Grow()
     {
         var tail = _snakeBodyPositions.Last!.Value;
@@ -49,12 +60,13 @@ internal class Snake
 
     public void Move(int deltaX, int deltaY)
     {
-        ClearSnake();
         var head = _snakeBodyPositions.First!.Value;
         var newHead = new Position(head.X + deltaX, head.Y + deltaY);
         _snakeBodyPositions.AddFirst(newHead);
+        var oldTail = _snakeBodyPositions.Last!.Value;
         _snakeBodyPositions.RemoveLast();
-        Render();
+        newHead.Render(_snakeBodyChar, ConsoleColor.DarkGreen);
+        oldTail.Erase();
     }
     public bool IsCollided
     {
@@ -72,5 +84,6 @@ internal class Snake
         }
     }
     public bool IsPositionOccupied(Position position) => _snakeBodyPositions.Contains(position);
+
 
 }

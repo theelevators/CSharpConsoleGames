@@ -1,5 +1,6 @@
 ﻿
 using SnakeGame.Specifications;
+using SnakeGame.Specifiers;
 
 namespace SnakeGame.Utils;
 
@@ -8,6 +9,63 @@ internal static class RenderExtensions
     const string UNDERLINE = "\x1B[4m";
     const string RESET = "\x1B[0m";
 
+
+    extension(Position position)
+    {
+        public void Render(char item, ConsoleColor foreground = ConsoleColor.White)
+        {
+            Console.ForegroundColor = foreground;
+            Console.SetCursorPosition(position.X, position.Y);
+            Console.Write(item);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        public void Erase()
+        {
+            Console.SetCursorPosition(position.X, position.Y);
+            Console.Write(' ');
+        }
+    }
+    extension<T>(T enumValue)
+    where T : struct, Enum
+    {
+        public string AsRendeable(bool useNumberIndicator = true)
+        {
+            var opt = enumValue.ToInt();
+            var name = Enum.GetName(enumValue);
+
+            if (useNumberIndicator)
+            {
+                return $"{opt}. {name}";
+            }
+            else
+            {
+                return $"{name}";
+            }
+        }
+
+        public void Render(int x, int y, bool underline, bool useNumberIndicator = false)
+        {
+            var renderable = underline ? enumValue.AsRendeable(useNumberIndicator).Underlined() : enumValue.AsRendeable(useNumberIndicator);
+            Console.SetCursorPosition(x, y);
+            Console.Write(renderable);
+        }
+        public T Next()
+        {
+
+            var values = Enum.GetValues<T>();
+            var index = Array.IndexOf(values, enumValue);
+            var nextIndex = (index + 1) % values.Length;
+            return values[nextIndex];
+        }
+        public T Previous()
+        {
+            var values = Enum.GetValues<T>();
+            var index = Array.IndexOf(values, enumValue);
+            var previousIndex = (index - 1 + values.Length) % values.Length;
+            return values[previousIndex];
+
+        }
+    }
     extension(MenuOption option)
     {
         public string AsRendeable() => option switch
@@ -79,11 +137,11 @@ internal static class RenderExtensions
         {
             return option switch
             {
-                SettingOption.Difficulty => SettingOption.NumberOfSimultaneousApples,
+                SettingOption.Difficulty => SettingOption.Cancel,
                 SettingOption.GrowthExponent => SettingOption.Difficulty,
                 SettingOption.SnakeSpeed => SettingOption.GrowthExponent,
-                SettingOption.NumberOfSimultaneousApples => SettingOption.Cancel,
-                SettingOption.Cancel => SettingOption.SnakeSpeed,
+                SettingOption.NumberOfSimultaneousApples => SettingOption.SnakeSpeed,
+                SettingOption.Cancel => SettingOption.NumberOfSimultaneousApples,
                 _ => option,
             };
         }
@@ -95,6 +153,7 @@ internal static class RenderExtensions
             Difficulty.Easy => "~Easy~",
             Difficulty.Medium => "~Medium~",
             Difficulty.Hard => "~Hard~",
+            Difficulty.Custom => "~Custom~",
             _ => string.Empty,
         };
         public Difficulty Next()
@@ -103,7 +162,8 @@ internal static class RenderExtensions
             {
                 Difficulty.Easy => Difficulty.Medium,
                 Difficulty.Medium => Difficulty.Hard,
-                Difficulty.Hard => Difficulty.Easy,
+                Difficulty.Hard => Difficulty.Custom,
+                Difficulty.Custom => Difficulty.Easy,
                 _ => level,
             };
         }
@@ -111,9 +171,10 @@ internal static class RenderExtensions
         {
             return level switch
             {
-                Difficulty.Easy => Difficulty.Hard,
+                Difficulty.Easy => Difficulty.Custom,
                 Difficulty.Medium => Difficulty.Easy,
                 Difficulty.Hard => Difficulty.Medium,
+                Difficulty.Custom => Difficulty.Hard,
                 _ => level,
             };
         }

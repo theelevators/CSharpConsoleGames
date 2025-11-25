@@ -22,14 +22,33 @@ internal class Game
     readonly LabelWithCounter _scoreLabel = new("Score: ");
     readonly FrameWindow _gameArea;
     readonly AppleManager _appleGenerator;
-    readonly GameSettings _settings;
+    readonly GameSettings _settings = GameSettings.Default;
+    readonly PauseMenu _pauseMenu;
+
+    private ConsoleKey? _availableKey => Console.KeyAvailable && Console.ReadKey(true).Key is ConsoleKey selectedKey ? selectedKey : null;
+
+
     public Game(GameSettings gameSettings)
     {
         _settings = gameSettings;
-        _snakeClock = new ComponentClock(_settings.SnakeSpeed/1000.0);
+        _snakeClock = new ComponentClock(_settings.SnakeSpeed / 1000.0);
         _gameArea = new FrameWindow(_windowSize.width, _windowSize.height);
         _appleGenerator = new AppleManager(_gameArea);
         _snake = new Snake(_gameArea.GetCenterPosition(), 10);
+        _pauseMenu = new PauseMenu(() =>
+        {
+            Console.Clear();
+            _gameArea.Render();
+            _snake.Render();
+            _appleGenerator.AllApples().ForEach(a => a.Render());
+            _scoreLabel.Render(ref _score);
+        }, () =>
+        {
+            Console.Clear();
+            isValid = false;
+            gameOver = true;
+        });
+
 
         Console.CursorVisible = false;
         Console.Title = "Snake Game";
@@ -38,7 +57,7 @@ internal class Game
         _fpsLabel.SetPosition(1, 0);
         _scoreLabel.SetPosition(_windowSize.width - 11, 0);
         _snake.Render();
-        _appleGenerator.GenerateApple().Render();
+        _appleGenerator.Generate(1).First().Render();
     }
 
     public void Run()
@@ -60,13 +79,30 @@ internal class Game
             var delta = Stopwatch.GetElapsedTime(startingTime);
             secondsElapsed += delta.TotalSeconds;
             _snakeClock.Add(delta.TotalSeconds);
-            if (Console.KeyAvailable)
+            var pressedKey = _availableKey;
+            if (pressedKey is ConsoleKey key)
             {
 
-                direction = Console.ReadKey(true).Key.AsDirection(previousDirection: direction);
+                if (key is ConsoleKey.P)
+                {
+                    _pauseMenu.Show();
+                    continue;
+
+                }
+
+                direction = key.AsDirection(previousDirection: direction);
+
+                if (direction is Direction.Up or Direction.Down)
+                {
+                    _snakeClock.Update((_settings.SnakeSpeed * 1.2) / 1000.0);
+                }
+                else if (direction is Direction.Left or Direction.Right)
+                {
+                    _snakeClock.Update(_settings.SnakeSpeed / 1000.0);
+                }
             }
 
-            if (_snakeClock.IsElapsed)
+            if (pressedKey is ConsoleKey.UpArrow or ConsoleKey.DownArrow or ConsoleKey.RightArrow or ConsoleKey.LeftArrow || _snakeClock.IsElapsed)
             {
                 _snakeClock.Reset();
                 var (newX, newY) = direction.ToDelta();
@@ -77,25 +113,28 @@ internal class Game
 
                 if (!_gameArea.IsInsideWindow(nextHeadPosition))
                 {
-                    isValid = false; 
+                    isValid = false;
                     gameOver = true;
                 }
-
 
                 var willEatApple = _appleGenerator.IsPositionOccupied(nextHeadPosition);
                 if (willEatApple)
                 {
-                    _snake.Grow();
+                    _snake.Grow(_settings.SnakeGrowthPerApple);
                     _appleGenerator.RemoveApple(nextHeadPosition);
 
-                    var newApple = _appleGenerator.GenerateApple();
+                    var apples = _appleGenerator.Generate(_settings.NumberOfSimultaneousApples - _appleGenerator.AppleCount);
 
-                    while (_snake.IsPositionOccupied(newApple.Position))
+                    foreach (var apple in apples)
                     {
-                        newApple = _appleGenerator.GenerateApple();
+                        var newApple = apple;
+                        while (_snake.IsPositionOccupied(newApple.Position))
+                        {
+                            var tmpApples = _appleGenerator.Generate(1);
+                            newApple = tmpApples.First();
+                        }
+                        newApple.Render();
                     }
-                    
-                    newApple.Render();
                     _score += 10;
 
                 }
@@ -107,15 +146,16 @@ internal class Game
                     gameOver = true;
                 }
 
-                //Reset every 10 seconds
-                if (secondsElapsed > 10)
-                {
-                    loopCounter = 0;
-                    secondsElapsed = 0;
-                }
-
                 _scoreLabel.Render(ref _score);
             }
+
+            //Reset every 10 seconds
+            if (secondsElapsed > 10)
+            {
+                loopCounter = 0;
+                secondsElapsed = 0;
+            }
+
 
             if (gameOver)
             {

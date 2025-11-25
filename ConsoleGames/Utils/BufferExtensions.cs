@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace SnakeGame.Utils;
@@ -81,5 +82,18 @@ internal static class BufferExtensions
             end--;
             start++;
         }
+    }
+
+
+    extension<T>(T enumValue)
+        where T : struct, Enum
+    {
+        public int ToInt() => Unsafe_As(enumValue);
+    }
+
+    private static int Unsafe_As<TEnum>(TEnum enumValue)
+        where TEnum : struct, Enum
+    {
+        return Unsafe.As<TEnum, int>(ref enumValue);
     }
 }

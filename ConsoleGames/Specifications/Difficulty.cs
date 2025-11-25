@@ -6,5 +6,6 @@ internal enum Difficulty
 {
     Easy,
     Medium,
-    Hard
+    Hard,
+    Custom
 }

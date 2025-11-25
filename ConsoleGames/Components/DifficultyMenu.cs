@@ -11,7 +11,7 @@ internal class DifficultyMenu(Difficulty difficulty = Difficulty.Easy)
     Difficulty _selectedOption = difficulty;
     public Difficulty Show(Position position)
     {
-        var (fWidth, fHeight) = (14, 5);
+        var (fWidth, fHeight) = (14, 7);
         var difWindow = new FrameWindow(fWidth, fHeight);
 
 
