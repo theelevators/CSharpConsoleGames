@@ -33,4 +33,10 @@ internal class LabelWithCounter
         Console.Write(_buffer, 0, _buffer.Length);
     }
 
+    public void Dispose()
+    {
+        Console.SetCursorPosition(_cursorPosition.left + _frameLabel.Length, _cursorPosition.top);
+        Console.Write(clearingBuffer, 0, clearingBuffer.Length);
+    }
+
 }

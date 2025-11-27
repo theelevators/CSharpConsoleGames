@@ -33,6 +33,7 @@ internal class DifficultyMenu(Difficulty difficulty = Difficulty.Easy)
             }
             else if (key == ConsoleKey.Enter)
             {
+                Console.Clear();
                 return _selectedOption;
             }
             Options.RenderAllOptions(position.X + x - (int)(fWidth * 0.3), position.Y + y, _selectedOption);

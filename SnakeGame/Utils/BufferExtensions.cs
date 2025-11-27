@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Runtime.CompilerServices;
+
 
 namespace SnakeGame.Utils;
 
 internal static class BufferExtensions
 {
+    extension(Array)
+    {
+        public static char[] NewClearingBuffer(int size)
+        {
+            var clearingBuffer = new char[size];
+            for (int i = 0; i < size; i++)
+            {
+                clearingBuffer[i] = (char)32; // ASCII space
+            }
+            return clearingBuffer;
+        }
+    }
+
     extension(int num)
     {
         // Implementation of citoa()
@@ -96,4 +107,5 @@ internal static class BufferExtensions
     {
         return Unsafe.As<TEnum, int>(ref enumValue);
     }
+
 }

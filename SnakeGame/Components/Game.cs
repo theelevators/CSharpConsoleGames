@@ -26,13 +26,14 @@ internal class Game
     readonly AppleManager _appleGenerator;
     readonly GameSettings _settings = GameSettings.Default;
     readonly PauseMenu _pauseMenu;
-
+    readonly double _originalSnakeSpeed;
     private ConsoleKey? _availableKey => Console.KeyAvailable && Console.ReadKey(true).Key is ConsoleKey selectedKey ? selectedKey : null;
 
 
     public Game(GameSettings gameSettings)
     {
         _settings = gameSettings;
+        _originalSnakeSpeed = _settings.SnakeSpeed;
         _snakeClock = new ComponentClock(_settings.SnakeSpeed / 1000.0);
         _gameArea = new FrameWindow(_windowSize.width, _windowSize.height);
         _appleGenerator = new AppleManager(_gameArea);
@@ -63,6 +64,7 @@ internal class Game
         _snake.Render();
         _appleGenerator.Generate(1).First().Render();
         _highestScoreLabel.Render(ref _highestScore);
+        _originalSnakeSpeed = _settings.SnakeSpeed;
     }
 
     public void Run()
@@ -125,7 +127,17 @@ internal class Game
                 var willEatApple = _appleGenerator.IsPositionOccupied(nextHeadPosition);
                 if (willEatApple)
                 {
-                    _settings.SnakeSpeed = _settings.SnakeSpeed >= 10 ? _settings.SnakeSpeed - 5 : _settings.SnakeSpeed;
+
+
+                    _settings.SnakeSpeed = _settings.Difficulty switch
+                    {
+                        Difficulty.Easy => _settings.SnakeSpeed >= 50 ? _settings.SnakeSpeed - 0.5 : _settings.SnakeSpeed,
+                        Difficulty.Medium => _settings.SnakeSpeed >= 30 ? _settings.SnakeSpeed - 3 : _settings.SnakeSpeed,
+                        Difficulty.Hard => _settings.SnakeSpeed >= 10 ? _settings.SnakeSpeed - 5 : _settings.SnakeSpeed,
+                        _ => _settings.SnakeSpeed,
+                    };
+
+
                     _snakeClock.Update(_settings.SnakeSpeed / 1000.0);
                     _snake.Grow(_settings.SnakeGrowthPerApple);
                     _appleGenerator.RemoveApple(nextHeadPosition);
@@ -178,5 +190,6 @@ internal class Game
             }
         }
         _settings.HighestScore = _highestScore;
+        _settings.SnakeSpeed = _originalSnakeSpeed;
     }
 }

@@ -8,7 +8,7 @@ internal class SelectionSlider(int[] range, int initialSelection, string? label 
     private int _selection = initialSelection;
     private readonly int[] _range = range;
     private readonly string _label = label ?? string.Empty;
-
+    private readonly char[] _clearingBuffer = Array.NewClearingBuffer(range.Length + (label?.Length ?? 0) + 2);
     public int Show(int x, int y)
     {
         if (_selection < 0 || _selection >= _range.Length)
@@ -42,10 +42,16 @@ internal class SelectionSlider(int[] range, int initialSelection, string? label 
             }
             else if (key == ConsoleKey.Enter)
             {
+                Console.SetCursorPosition(x, y);
+                Console.Write(_clearingBuffer, 0, _clearingBuffer.Length);
+                selectionLabel.Dispose();
                 return _range[_selection];
             }
         }
+
+
     }
+
     private void Render(int x, int y)
     {
         Console.SetCursorPosition(x, y);

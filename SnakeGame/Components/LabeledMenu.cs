@@ -5,10 +5,12 @@ namespace SnakeGame.Components;
 internal abstract class LabeledMenu<T>(string title, int x, int y, bool useNumberIndicator)
     where T : struct, Enum
 {
+    static readonly T[] _options = Enum.GetValues<T>();
     internal abstract bool OnOptionSelected(T opt);
     public void Show(T selectedOption = default)
     {
-        selectedOption.Next();
+        if (!_options.Contains(selectedOption))
+            selectedOption = selectedOption.Next();
 
         Console.Clear();
         Console.CursorVisible = false;
@@ -44,7 +46,7 @@ internal abstract class LabeledMenu<T>(string title, int x, int y, bool useNumbe
 
     private void RenderMenuOptions(int x, int y, T selectedOption = default)
     {
-        foreach (var opt in Enum.GetValues<T>())
+        foreach (var opt in _options)
         {
             opt.Render(x, y + opt.ToInt(), opt.Equals(selectedOption), useNumberIndicator);
         }
