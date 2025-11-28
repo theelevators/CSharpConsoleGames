@@ -1,5 +1,6 @@
 ﻿
-using SnakeGame.Specifiers;
+using ConsoleGames.Core.Render.Components;
+using ConsoleGames.Core.Render.Types;
 
 namespace SnakeGame.Components;
 
@@ -38,8 +39,8 @@ internal class AppleManager
         int x, y;
         do
         {
-            x = _random.Next(1, Console.BufferWidth - 1);
-            y = _random.Next(1, Console.BufferHeight - 1);
+            x = _random.Next(1, _gameArea.Width - 1);
+            y = _random.Next(1, _gameArea.Height - 1);
         } while (!_gameArea.IsInsideWindow(new(x, y)) && !IsPositionOccupied(new(x, y)));
         var position = new Position(x, y);
         _occupiedPositions.Add(position);

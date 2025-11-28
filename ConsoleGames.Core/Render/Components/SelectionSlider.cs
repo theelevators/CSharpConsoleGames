@@ -1,9 +1,10 @@
 ﻿
-using SnakeGame.Utils;
 
-namespace SnakeGame.Components;
+using ConsoleGames.Core.Render.Utils;
 
-internal class SelectionSlider(int[] range, int initialSelection, string? label = null)
+namespace ConsoleGames.Core.Render.Components;
+
+public class SelectionSlider(int[] range, int initialSelection, string? label = null)
 {
     private int _selection = initialSelection;
     private readonly int[] _range = range;
@@ -16,7 +17,7 @@ internal class SelectionSlider(int[] range, int initialSelection, string? label 
             _selection = 0;
         }
 
-        var selectionLabel = new LabelWithCounter(_label);
+        var selectionLabel = new Indicator(_label);
         selectionLabel.SetPosition(x + _range.Length + 3, y);
 
         Render(x, y);

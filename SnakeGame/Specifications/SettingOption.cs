@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SnakeGame.Specifications;
+﻿namespace SnakeGame.Specifications;
 
 internal enum SettingOption
 {

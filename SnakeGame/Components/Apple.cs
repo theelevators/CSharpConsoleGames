@@ -1,4 +1,4 @@
-﻿using SnakeGame.Specifiers;
+﻿using ConsoleGames.Core.Render.Types;
 
 namespace SnakeGame.Components;
 

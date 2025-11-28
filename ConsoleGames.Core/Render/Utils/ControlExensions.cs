@@ -1,10 +1,10 @@
 ﻿
 
-using SnakeGame.Specifiers;
+using ConsoleGames.Core.Render.Types;
 
-namespace SnakeGame.Utils;
+namespace ConsoleGames.Core.Render.Utils;
 
-internal static class ControlExensions
+public static class ControlExensions
 {
     extension(ConsoleKey key)
     {

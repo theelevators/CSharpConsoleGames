@@ -1,7 +1,8 @@
 ﻿
+using ConsoleGames.Core.Render.Components;
+using ConsoleGames.Core.Render.Types;
+using ConsoleGames.Core.Render.Utils;
 using SnakeGame.Specifications;
-using SnakeGame.Specifiers;
-using SnakeGame.Utils;
 using System.Diagnostics;
 
 namespace SnakeGame.Components;
@@ -19,15 +20,15 @@ internal class Game
     int loopCounter = 0;
     double secondsElapsed = 0;
     Direction direction = Direction.Right;
-    readonly LabelWithCounter _fpsLabel = new("FPS: ");
-    readonly LabelWithCounter _scoreLabel = new("Score: ");
-    readonly LabelWithCounter _highestScoreLabel = new("Highest Score: ");
+    readonly Indicator _fpsLabel;
+    readonly Indicator _scoreLabel;
+    readonly Indicator _highestScoreLabel;
     readonly FrameWindow _gameArea;
     readonly AppleManager _appleGenerator;
     readonly GameSettings _settings = GameSettings.Default;
     readonly PauseMenu _pauseMenu;
     readonly double _originalSnakeSpeed;
-    private ConsoleKey? _availableKey => Console.KeyAvailable && Console.ReadKey(true).Key is ConsoleKey selectedKey ? selectedKey : null;
+    private static ConsoleKey? _availableKey => Console.KeyAvailable && Console.ReadKey(true).Key is ConsoleKey selectedKey ? selectedKey : null;
 
 
     public Game(GameSettings gameSettings)
@@ -38,13 +39,20 @@ internal class Game
         _gameArea = new FrameWindow(_windowSize.width, _windowSize.height);
         _appleGenerator = new AppleManager(_gameArea);
         _snake = new Snake(_gameArea.GetCenterPosition(), 10);
+
+        _fpsLabel = new("FPS: ");
+        _scoreLabel = new("Score: ");
+        _highestScoreLabel = new("Highest Score: ");
+
         _pauseMenu = new PauseMenu(_settings, () =>
         {
-            Console.Clear();
-            _gameArea.Render();
+            
+            _gameArea.ReRender();
             _snake.Render();
             _appleGenerator.AllApples().ForEach(a => a.Render());
-            _scoreLabel.Render(ref _score);
+            _fpsLabel.ReRender(ref loopCounter);
+            _scoreLabel.ReRender(ref _score);
+            _highestScoreLabel.ReRender(ref _highestScore);
         }, () =>
         {
             Console.Clear();
@@ -92,7 +100,7 @@ internal class Game
 
                 if (key is ConsoleKey.P)
                 {
-                    _pauseMenu.Show();
+                    _pauseMenu.Show(clearScreen: false);
                     continue;
 
                 }

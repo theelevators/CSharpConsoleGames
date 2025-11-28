@@ -1,6 +1,7 @@
 ﻿
-using SnakeGame.Specifiers;
-using SnakeGame.Utils;
+using ConsoleGames.Core.Render.Types;
+using ConsoleGames.Core.Render.Utils;
+
 
 namespace SnakeGame.Components;
 

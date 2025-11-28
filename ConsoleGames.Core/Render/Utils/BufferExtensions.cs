@@ -1,10 +1,23 @@
 ﻿using System.Runtime.CompilerServices;
 
 
-namespace SnakeGame.Utils;
+namespace ConsoleGames.Core.Render.Utils;
 
 internal static class BufferExtensions
 {
+    extension(char[] buffer)
+    {
+        public int LengthUntilTerminator()
+        {
+            int length = 0;
+            while (length < buffer.Length && buffer[length] != '\0')
+            {
+                length++;
+            }
+            return length;
+        }
+    }
+
     extension(Array)
     {
         public static char[] NewClearingBuffer(int size)
@@ -65,22 +78,6 @@ internal static class BufferExtensions
         }
 
     }
-
-    extension(char[] buffer)
-    {
-        public void FillClearingBuffer(char[] clearingBuffer)
-        {
-            int idx = 0;
-            while (idx < buffer.Length)
-            {
-                if (buffer[idx] is default(char)) // is null terminator
-                    break;
-                clearingBuffer[idx] = (char)32;
-                idx++;
-            }
-        }
-    }
-
     private static void Reverse(char[] str, int length)
     {
         int start = 0;
@@ -100,6 +97,7 @@ internal static class BufferExtensions
         where T : struct, Enum
     {
         public int ToInt() => Unsafe_As(enumValue);
+
     }
 
     private static int Unsafe_As<TEnum>(TEnum enumValue)

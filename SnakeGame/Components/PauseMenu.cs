@@ -1,10 +1,11 @@
-﻿using SnakeGame.Specifications;
+﻿using ConsoleGames.Core.Render.Components;
+using SnakeGame.Specifications;
 
 namespace SnakeGame.Components;
 
 internal class PauseMenu(GameSettings settings,Action OnResume, Action OnExit) : LabeledMenu<PauseOption>("Game Paused", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 - 5, useNumberIndicator: true)
 {
-    internal override bool OnOptionSelected(PauseOption selectedOption)
+    public override bool OnOptionSelected(PauseOption selectedOption)
     {
 
         if (selectedOption == PauseOption.Resume)

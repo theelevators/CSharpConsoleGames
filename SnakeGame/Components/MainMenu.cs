@@ -1,13 +1,14 @@
 ﻿
+using ConsoleGames.Core.Render.Components;
 using SnakeGame.Specifications;
-using SnakeGame.Utils;
+
 
 namespace SnakeGame.Components;
 
 internal class MainMenu(string gameTitle, GameSettings gameSettings) : LabeledMenu<MenuOption>(gameTitle, Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 - 5, useNumberIndicator: true)
 {
 
-    internal override bool OnOptionSelected(MenuOption selectedOption)
+    public override bool OnOptionSelected(MenuOption selectedOption)
     {
         HandleMenuSelection(selectedOption);
 
@@ -42,15 +43,3 @@ internal class MainMenu(string gameTitle, GameSettings gameSettings) : LabeledMe
         return gameSettings;
     }
 }
-
-internal static class Options
-{
-    public static void RenderAllOptions(int x, int y, MenuOption selectedOption = MenuOption.StartGame)
-    {
-        foreach (MenuOption opt in Enum.GetValues<MenuOption>())
-        {
-            opt.Render(x, y + (int)opt, opt == selectedOption);
-        }
-    }
-}
-

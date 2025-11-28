@@ -1,7 +1,6 @@
-﻿
-namespace SnakeGame.Specifiers;
+﻿namespace ConsoleGames.Core.Render.Types;
 
-internal enum Direction
+public enum Direction
 {
     Up,
     Down,
@@ -10,7 +9,7 @@ internal enum Direction
     None
 }
 
-static internal class DirectionExtensions
+static public class DirectionExtensions
 {
     extension(Direction direction)
     {
