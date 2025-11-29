@@ -3,7 +3,7 @@
 
 namespace ConsoleGames.Core.Render.Utils;
 
-internal static class BufferExtensions
+public static class BufferExtensions
 {
     extension(char[] buffer)
     {

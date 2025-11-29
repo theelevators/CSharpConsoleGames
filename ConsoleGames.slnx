@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="BrickBreaker/BrickBreaker.csproj" Id="f1ea120e-f339-4d41-bf84-2e0f749d2d1e" />
   <Project Path="ConsoleGames.Core/ConsoleGames.Core.csproj" Id="87b685a9-360e-4cd4-99a7-4efc8e321a98" />
   <Project Path="SnakeGame/SnakeGame.csproj" />
 </Solution>
